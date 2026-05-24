@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String,Float
 from database import Base
 
 class Weather(Base):
@@ -9,6 +9,6 @@ class Weather(Base):
 
     city = Column(String)
 
-    temperature = Column(String)
-
+    temperature = Column(Float)
+    
     condition = Column(String)

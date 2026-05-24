@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from database import engine, SessionLocal
 from models import Base, Weather
+from schemas import WeatherCreate
 from fastapi.middleware.cors import CORSMiddleware
 Base.metadata.create_all(bind=engine)
 
@@ -19,72 +20,97 @@ def home():
 
 
 # CREATE
+# CREATE
 @app.post("/weather")
-def create_weather(city: str, temperature: str, condition: str):
+def create_weather(weather: WeatherCreate):
 
     db = SessionLocal()
 
-    weather = Weather(
-        city=city,
-        temperature=temperature,
-        condition=condition
-    )
+    try:
 
-    db.add(weather)
+        new_weather = Weather(
+            city=weather.city,
+            temperature=weather.temperature,
+            condition=weather.condition
+        )
 
-    db.commit()
+        db.add(new_weather)
 
-    db.refresh(weather)
+        db.commit()
 
-    return weather
+        db.refresh(new_weather)
 
+        return new_weather
+
+    finally:
+        db.close()
+
+# READ
 # READ
 @app.get("/weather")
 def get_weather():
 
     db = SessionLocal()
 
-    weather_data = db.query(Weather).all()
+    try:
 
-    return weather_data
+        weather_data = db.query(Weather).all()
 
+        return weather_data
+
+    finally:
+        db.close()
+
+# UPDATE
 # UPDATE
 @app.put("/weather/{weather_id}")
 def update_weather(
     weather_id: int,
-    city: str,
-    temperature: str,
-    condition: str
+    updated_weather: WeatherCreate
 ):
-
     db = SessionLocal()
 
-    weather = db.query(Weather).filter(
-        Weather.id == weather_id
-    ).first()
+    try:
 
-    weather.city = city
-    weather.temperature = temperature
-    weather.condition = condition
+        weather = db.query(Weather).filter(
+            Weather.id == weather_id
+        ).first()
 
-    db.commit()
+        if not weather:
+            return {"error": "Weather not found"}
 
-    db.refresh(weather)
+        weather.city = updated_weather.city
+        weather.temperature = updated_weather.temperature
+        weather.condition = updated_weather.condition
+        db.commit()
 
-    return weather
+        db.refresh(weather)
 
+        return weather
+
+    finally:
+        db.close()
+# DELETE
 # DELETE
 @app.delete("/weather/{weather_id}")
 def delete_weather(weather_id: int):
 
     db = SessionLocal()
 
-    weather = db.query(Weather).filter(
-        Weather.id == weather_id
-    ).first()
+    try:
 
-    db.delete(weather)
+        weather = db.query(Weather).filter(
+            Weather.id == weather_id
+        ).first()
 
-    db.commit()
+        if not weather:
+            return {"error": "Weather not found"}
 
-    return {"message": "Weather deleted successfully"}
+        db.delete(weather)
+
+        db.commit()
+
+        return {"message": "Weather deleted successfully"}
+
+    finally:
+        db.close()

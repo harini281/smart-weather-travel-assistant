@@ -1,39 +1,109 @@
-import "../App.css";
+import "./WeatherCard.css";
 
 function WeatherCard({ weather }) {
+
+  if (!weather) {
+
+    return null;
+
+  }
 
   return (
 
     <div className="weather-card">
 
-      <h2>
-        {weather.location.name}
-      </h2>
+      {/* LOCATION */}
 
-      <img
-        src={weather.current.condition.icon}
-        alt="weather icon"
-      />
+      <div className="weather-header">
 
-      <p>
-        {weather.current.temp_c}°C
-      </p>
+        <h2>
+          📍 {weather.location.name}
+        </h2>
 
-      <p>
-        {weather.current.condition.text}
-      </p>
+        <p>
+          {weather.location.country}
+        </p>
 
-      <p>
-        Humidity: {weather.current.humidity}%
-      </p>
+      </div>
 
-      <p>
-        Wind Speed: {weather.current.wind_kph} kph
-      </p>
+      {/* WEATHER ICON */}
 
-      <p>
-        Feels Like: {weather.current.feelslike_c}°C
-      </p>
+      <div className="weather-icon-section">
+
+        <img
+          src={weather.current.condition.icon}
+          alt="weather icon"
+        />
+
+        <h1>
+          {weather.current.temp_c}°C
+        </h1>
+
+      </div>
+
+      {/* CONDITION */}
+
+      <div className="condition-box">
+
+        <h3>
+          ☁ {weather.current.condition.text}
+        </h3>
+
+      </div>
+
+      {/* WEATHER DETAILS */}
+
+      <div className="weather-details">
+
+        <div className="detail-card">
+
+          <span>
+            💧 Humidity
+          </span>
+
+          <h4>
+            {weather.current.humidity}%
+          </h4>
+
+        </div>
+
+        <div className="detail-card">
+
+          <span>
+            🌬 Wind
+          </span>
+
+          <h4>
+            {weather.current.wind_kph} kph
+          </h4>
+
+        </div>
+
+        <div className="detail-card">
+
+          <span>
+            🌡 Feels Like
+          </span>
+
+          <h4>
+            {weather.current.feelslike_c}°C
+          </h4>
+
+        </div>
+
+        <div className="detail-card">
+
+          <span>
+            🕒 Local Time
+          </span>
+
+          <h4>
+            {weather.location.localtime}
+          </h4>
+
+        </div>
+
+      </div>
 
     </div>
 
