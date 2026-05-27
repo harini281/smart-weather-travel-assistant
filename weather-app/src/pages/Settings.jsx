@@ -1,8 +1,6 @@
 import {
-
   useState,
   useEffect
-
 } from "react";
 
 import Layout from "../components/Layout";
@@ -11,73 +9,173 @@ import "../App.css";
 
 export default function Settings() {
 
-  // STATES
+  /* STATES */
 
   const [theme, setTheme] =
     useState(
-
       localStorage.getItem("theme")
       || "dark"
-
     );
 
   const [language, setLanguage] =
     useState(
-
       localStorage.getItem("language")
       || "EN"
-
     );
 
   const [notifications,
     setNotifications] =
     useState(
-
       JSON.parse(
-
         localStorage.getItem(
           "notifications"
         )
-
       ) ?? true
-
     );
 
   const [travelAlerts,
     setTravelAlerts] =
     useState(
-
       JSON.parse(
-
         localStorage.getItem(
           "travelAlerts"
         )
-
       ) ?? true
-
     );
 
   const [username,
     setUsername] =
     useState(
-
       localStorage.getItem(
         "username"
       ) || "User"
-
     );
 
   const [email,
     setEmail] =
     useState(
-
       localStorage.getItem(
         "userEmail"
       ) || ""
-
     );
 
-  // SAVE SETTINGS
+  /* TRANSLATIONS */
+
+  const text = {
+
+    EN: {
+
+      title: "Settings",
+
+      subtitle:
+        "Manage your profile, language, theme and weather preferences",
+
+      profile:
+        "Profile Settings",
+
+      theme:
+        "Theme Settings",
+
+      language:
+        "Language",
+
+      notifications:
+        "Notifications",
+
+      weatherNotify:
+        "Weather Notifications",
+
+      travelNotify:
+        "Travel Alerts",
+
+      save:
+        "Save Settings",
+
+      username:
+        "Username",
+
+      email:
+        "Email"
+
+    },
+
+    TA: {
+
+      title:
+        "அமைப்புகள்",
+
+      subtitle:
+        "உங்கள் சுயவிவரம், மொழி மற்றும் தீம் அமைப்புகளை நிர்வகிக்கவும்",
+
+      profile:
+        "சுயவிவர அமைப்புகள்",
+
+      theme:
+        "தீம் அமைப்புகள்",
+
+      language:
+        "மொழி",
+
+      notifications:
+        "அறிவிப்புகள்",
+
+      weatherNotify:
+        "வானிலை அறிவிப்புகள்",
+
+      travelNotify:
+        "பயண எச்சரிக்கைகள்",
+
+      save:
+        "அமைப்புகளை சேமிக்கவும்",
+
+      username:
+        "பயனர் பெயர்",
+
+      email:
+        "மின்னஞ்சல்"
+
+    },
+
+    SI: {
+
+      title:
+        "සැකසුම්",
+
+      subtitle:
+        "ඔබගේ පැතිකඩ, භාෂාව සහ තේමාව කළමනාකරණය කරන්න",
+
+      profile:
+        "පැතිකඩ සැකසුම්",
+
+      theme:
+        "තේමා සැකසුම්",
+
+      language:
+        "භාෂාව",
+
+      notifications:
+        "දැනුම්දීම්",
+
+      weatherNotify:
+        "කාලගුණ දැනුම්දීම්",
+
+      travelNotify:
+        "ගමන් අනතුරු ඇඟවීම්",
+
+      save:
+        "සැකසුම් සුරකින්න",
+
+      username:
+        "පරිශීලක නාමය",
+
+      email:
+        "ඊමේල්"
+
+    }
+
+  };
+
+  /* SAVE SETTINGS */
 
   useEffect(() => {
 
@@ -113,7 +211,7 @@ export default function Settings() {
 
   ]);
 
-  // SAVE PROFILE
+  /* SAVE PROFILE */
 
   const saveProfile = () => {
 
@@ -145,27 +243,25 @@ export default function Settings() {
 
           <h1>
 
-            ⚙ Settings
+            ⚙ {text[language].title}
 
           </h1>
 
           <p>
 
-            Manage your profile,
-            language, theme and
-            weather preferences
+            {text[language].subtitle}
 
           </p>
 
         </div>
 
-        {/* PROFILE CARD */}
+        {/* PROFILE */}
 
         <div className="settings-card">
 
           <h2>
 
-            👤 Profile Settings
+            👤 {text[language].profile}
 
           </h2>
 
@@ -175,7 +271,9 @@ export default function Settings() {
 
               type="text"
 
-              placeholder="Username"
+              placeholder={
+                text[language].username
+              }
 
               value={username}
 
@@ -191,7 +289,9 @@ export default function Settings() {
 
               type="email"
 
-              placeholder="Email"
+              placeholder={
+                text[language].email
+              }
 
               value={email}
 
@@ -213,7 +313,7 @@ export default function Settings() {
 
           <h2>
 
-            🎨 Theme Settings
+            🎨 {text[language].theme}
 
           </h2>
 
@@ -263,7 +363,7 @@ export default function Settings() {
 
           <h2>
 
-            🌐 Language
+            🌐 {text[language].language}
 
           </h2>
 
@@ -330,7 +430,7 @@ export default function Settings() {
 
           <h2>
 
-            🔔 Notifications
+            🔔 {text[language].notifications}
 
           </h2>
 
@@ -340,7 +440,7 @@ export default function Settings() {
 
               <span>
 
-                Weather Notifications
+                {text[language].weatherNotify}
 
               </span>
 
@@ -370,7 +470,7 @@ export default function Settings() {
 
               <span>
 
-                Travel Alerts
+                {text[language].travelNotify}
 
               </span>
 
@@ -407,7 +507,7 @@ export default function Settings() {
           onClick={saveProfile}
         >
 
-          💾 Save Settings
+          💾 {text[language].save}
 
         </button>
 

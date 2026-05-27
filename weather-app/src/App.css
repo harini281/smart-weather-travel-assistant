@@ -3860,3 +3860,32 @@ body.light {
 
   transform: translateY(-2px);
 }
+.leaflet-map {
+  height: 500px;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.map-wrapper {
+  margin-top: 20px;
+}
+
+.maps-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.maps-search input {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  width: 250px;
+}
+
+.maps-search button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}

@@ -2,115 +2,54 @@ import { useState } from "react";
 
 export default function Agent() {
 
-  const [city, setCity] =
-    useState("");
+  const [city, setCity] = useState("");
+  const [response, setResponse] = useState("");
 
-  const [response, setResponse] =
-    useState("");
+  const analyzeCity = () => {
 
-  const [loading, setLoading] =
-    useState(false);
+    const place = city.toLowerCase();
 
-  // HUGGING FACE TOKEN
+    if (place.includes("malabe")) {
 
-  const HF_TOKEN =import.meta.env.VITE_HF_TOKEN;
-  
+      setResponse(
+        "🌤️ Malabe is a calm suburban area with warm weather and moderate traffic. Great for education and residential travel."
+      );
 
+    }
 
-  // ANALYZE FUNCTION
+    else if (place.includes("colombo")) {
 
-  const handleAnalyze =
-    async () => {
+      setResponse(
+        "🏙️ Colombo is a busy city with hot weather and heavy traffic. Best travel time is morning or evening."
+      );
 
-      if (!city) {
+    }
 
-        setResponse(
-          "Please enter a city."
-        );
+    else if (place.includes("kandy")) {
 
-        return;
-      }
+      setResponse(
+        "⛰️ Kandy has cooler weather and beautiful mountain views. Carry a light jacket for evenings."
+      );
 
-      try {
+    }
 
-        setLoading(true);
+    else if (place.includes("galle")) {
 
-        setResponse("");
+      setResponse(
+        "🏖️ Galle is a coastal tourist city with sunny weather and relaxing beaches."
+      );
 
-        // PROMPT
+    }
 
-        const prompt = `
+    else {
 
-Give short travel advice
-for visiting ${city}.
+      setResponse(
+        "❌ No travel information available for this location."
+      );
 
-Mention clothing,
-weather preparation,
-and safety tips.
+    }
 
-`;
-
-        // API CALL
-
-        const res =
-          await fetch(
-
-            "https://api-inference.huggingface.co/models/google/flan-t5-large",
-
-            {
-
-              method: "POST",
-
-              headers: {
-
-                Authorization:
-                  `Bearer ${HF_TOKEN}`,
-
-                "Content-Type":
-                  "application/json",
-              },
-
-              body: JSON.stringify({
-
-                inputs: prompt,
-
-              }),
-            }
-          );
-
-        // JSON RESPONSE
-
-        const data =
-          await res.json();
-
-        console.log(data);
-
-        // AI TEXT
-
-        const text =
-
-          data?.[0]
-          ?.generated_text ||
-
-          "AI response unavailable.";
-
-        // SET RESPONSE
-
-        setResponse(text);
-
-      } catch (error) {
-
-        console.log(error);
-
-        setResponse(
-          "AI request failed."
-        );
-
-      } finally {
-
-        setLoading(false);
-      }
-    };
+  };
 
   return (
 
@@ -118,93 +57,111 @@ and safety tips.
       style={{
         minHeight: "100vh",
         background:
-          "linear-gradient(to right,#020617,#1e1b4b)",
-        color: "white",
+          "linear-gradient(to bottom, #020024, #090979, #000000)",
         padding: "40px",
+        color: "white",
+        fontFamily: "Arial"
       }}
     >
 
-      <h1>
-        🤖 AI Travel Agent
-      </h1>
+      {/* Title */}
+      <div style={{ marginBottom: "30px" }}>
 
-      <p>
-        Open-source AI travel assistant
-      </p>
+        <h1
+          style={{
+            fontSize: "48px",
+            marginBottom: "10px"
+          }}
+        >
+          🤖 AI Travel Agent
+        </h1>
 
-      {/* INPUT AREA */}
+        <p
+          style={{
+            color: "#cfcfcf",
+            fontSize: "18px"
+          }}
+        >
+          Smart travel assistant for weather and city insights
+        </p>
 
+      </div>
+
+      {/* Search Box */}
       <div
         style={{
           display: "flex",
-          gap: "10px",
-          marginTop: "30px",
+          gap: "15px",
+          marginBottom: "30px"
         }}
       >
 
         <input
-
           type="text"
-
-          placeholder="Enter city"
-
+          placeholder="Enter city name..."
           value={city}
-
-          onChange={(e) =>
-            setCity(e.target.value)
-          }
-
+          onChange={(e) => setCity(e.target.value)}
           style={{
             flex: 1,
-            padding: "15px",
-            borderRadius: "10px",
+            padding: "18px",
+            borderRadius: "15px",
             border: "none",
-            fontSize: "16px",
+            outline: "none",
+            fontSize: "18px",
+            background: "#1e1e2f",
+            color: "white"
           }}
         />
 
         <button
-
-          onClick={handleAnalyze}
-
+          onClick={analyzeCity}
           style={{
-            padding: "15px 25px",
+            padding: "18px 30px",
+            borderRadius: "15px",
             border: "none",
-            borderRadius: "10px",
-            background: "#7c3aed",
+            background:
+              "linear-gradient(to right, #7b2ff7, #f107a3)",
             color: "white",
-            fontWeight: "bold",
+            fontSize: "18px",
             cursor: "pointer",
+            fontWeight: "bold"
           }}
         >
-
-          {loading
-            ? "Analyzing..."
-            : "Analyze"}
-
+          Analyze
         </button>
 
       </div>
 
-      {/* RESPONSE */}
+      {/* Response Card */}
+      <div
+        style={{
+          background: "rgba(255,255,255,0.08)",
+          padding: "30px",
+          borderRadius: "20px",
+          backdropFilter: "blur(10px)",
+          boxShadow: "0 8px 20px rgba(0,0,0,0.3)"
+        }}
+      >
 
-      {response && (
-
-        <div
+        <h2
           style={{
-            marginTop: "30px",
-            padding: "20px",
-            borderRadius: "12px",
-            background:
-              "#1e1b4b",
-            lineHeight: "1.8",
+            marginBottom: "15px"
           }}
         >
+          ✨ AI Response
+        </h2>
 
-          {response}
+        <p
+          style={{
+            fontSize: "20px",
+            lineHeight: "1.8",
+            color: "#f1f1f1"
+          }}
+        >
+          {response || "No AI response yet."}
+        </p>
 
-        </div>
-      )}
+      </div>
 
     </div>
   );

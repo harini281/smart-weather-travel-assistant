@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 
 import Layout from "../components/Layout";
 
-import ForecastCard from "../components/ForecastCard";
-
 import SearchBar from "../components/SearchBar";
 
 import "../App.css";
@@ -27,10 +25,11 @@ export default function Forecast() {
   const [hourly, setHourly] =
     useState([]);
 
-  // API
+  // OPENWEATHER API KEY
 
   const apiKey =
-    "YOUR_WEATHER_API_KEY";
+    "596e8629dc6604ff3ad22867e61e0667";
+
 
   // FETCH FORECAST
 
@@ -47,7 +46,7 @@ export default function Forecast() {
       const response =
         await fetch(
 
-          `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${cityName}&days=5`
+          `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`
 
         );
 
@@ -62,24 +61,24 @@ export default function Forecast() {
       const data =
         await response.json();
 
-      // DAILY FORECAST
+      console.log(data);
+
+      // FORECAST DATA
 
       setForecast(
-        data.forecast.forecastday
+        data.list.slice(0, 5)
       );
 
-      // HOURLY FORECAST
+      // HOURLY DATA
 
-      const hourlyData =
-        data.forecast.forecastday.flatMap(
-          (day) =>
-            day.hour.slice(0, 6)
-        );
+      setHourly(
+        data.list.slice(0, 8)
+      );
 
-      setHourly(hourlyData);
+      // CITY
 
       setCity(
-        data.location.name
+        data.city.name
       );
 
     } catch (err) {
@@ -94,6 +93,7 @@ export default function Forecast() {
 
   };
 
+
   // INITIAL LOAD
 
   useEffect(() => {
@@ -102,7 +102,8 @@ export default function Forecast() {
 
   }, []);
 
-  // LOCATION WEATHER
+
+  // CURRENT LOCATION
 
   const getCurrentLocation =
     () => {
@@ -121,11 +122,20 @@ export default function Forecast() {
             `${lat},${lon}`
           );
 
+        },
+
+        () => {
+
+          setError(
+            "Location denied"
+          );
+
         }
 
       );
 
     };
+
 
   return (
 
@@ -154,6 +164,7 @@ export default function Forecast() {
 
         </div>
 
+
         {/* SEARCH BAR */}
 
         <SearchBar
@@ -168,9 +179,10 @@ export default function Forecast() {
 
           locLoading={loading}
 
-          placeholder="Search city, zip code, landmark..."
+          placeholder="Search city..."
 
         />
+
 
         {/* ERROR */}
 
@@ -184,6 +196,7 @@ export default function Forecast() {
 
         )}
 
+
         {/* LOADING */}
 
         {loading && (
@@ -196,7 +209,8 @@ export default function Forecast() {
 
         )}
 
-        {/* CITY TITLE */}
+
+        {/* LOCATION */}
 
         {!loading && !error && (
 
@@ -208,7 +222,8 @@ export default function Forecast() {
 
         )}
 
-        {/* DAILY FORECAST */}
+
+        {/* FORECAST */}
 
         {!loading && (
 
@@ -216,22 +231,74 @@ export default function Forecast() {
 
             <div className="section-title">
 
-              📅 5-Day Forecast
+              📅 Forecast
 
             </div>
 
             <div className="forecast-grid">
 
               {forecast.map(
-                (day, index) => (
+                (item, index) => (
 
-                  <ForecastCard
-
+                  <div
                     key={index}
+                    className="forecast-card"
+                  >
 
-                    day={day}
+                    <h2>
 
-                  />
+                      {
+                        item.dt_txt
+                      }
+
+                    </h2>
+
+                    <img
+                      src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+                      alt="weather"
+                    />
+
+                    <h1>
+
+                      {
+                        Math.round(
+                          item.main.temp
+                        )
+                      }°C
+
+                    </h1>
+
+                    <p>
+
+                      ☁ {
+                        item.weather[0]
+                          .description
+                      }
+
+                    </p>
+
+                    <div>
+
+                      💧 Humidity:
+                      {" "}
+                      {
+                        item.main
+                          .humidity
+                      }%
+
+                    </div>
+
+                    <div>
+
+                      🌬 Wind:
+                      {" "}
+                      {
+                        item.wind.speed
+                      } km/h
+
+                    </div>
+
+                  </div>
 
                 )
               )}
@@ -241,6 +308,7 @@ export default function Forecast() {
           </>
 
         )}
+
 
         {/* HOURLY */}
 
@@ -267,7 +335,7 @@ export default function Forecast() {
                     <h3>
 
                       {
-                        hour.time.split(
+                        hour.dt_txt.split(
                           " "
                         )[1]
                       }
@@ -275,22 +343,25 @@ export default function Forecast() {
                     </h3>
 
                     <img
-                      src={
-                        hour.condition.icon
-                      }
+                      src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`}
                       alt="weather"
                     />
 
                     <h2>
 
-                      {hour.temp_c}°C
+                      {
+                        Math.round(
+                          hour.main.temp
+                        )
+                      }°C
 
                     </h2>
 
                     <p>
 
                       ☁ {
-                        hour.condition.text
+                        hour.weather[0]
+                          .description
                       }
 
                     </p>
@@ -298,7 +369,8 @@ export default function Forecast() {
                     <div>
 
                       💧 {
-                        hour.humidity
+                        hour.main
+                          .humidity
                       }%
 
                     </div>

@@ -20,7 +20,8 @@ import "leaflet/dist/leaflet.css";
 
 import "../App.css";
 
-// FIX MARKER ICON
+
+// FIX LEAFLET MARKER ICON
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -37,7 +38,8 @@ L.Icon.Default.mergeOptions({
 
 });
 
-// AUTO CENTER
+
+// AUTO CENTER MAP
 
 function ChangeMapView({ center }) {
 
@@ -48,13 +50,10 @@ function ChangeMapView({ center }) {
   return null;
 }
 
+
 export default function Maps() {
 
   // STATES
-
-  const [currentLocation,
-    setCurrentLocation] =
-    useState("");
 
   const [destination,
     setDestination] =
@@ -80,14 +79,24 @@ export default function Maps() {
     setTravelWeather] =
     useState(null);
 
-  // WEATHER API KEY
+
+  // API KEY
 
   const apiKey =
-    "596e8629dc6604ff3ad22867e61e0667";
+  "596e8629dc6604ff3ad22867e61e0667";
 
-  // GET LIVE LOCATION
+  // GET CURRENT LOCATION
 
   useEffect(() => {
+
+    if (!navigator.geolocation) {
+
+      setError(
+        "Geolocation not supported"
+      );
+
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
 
@@ -108,16 +117,18 @@ export default function Maps() {
 
       () => {
 
-        console.log(
+        setError(
           "Location permission denied"
         );
+
       }
 
     );
 
   }, []);
 
-  // SEARCH LOCATION
+
+  // SEARCH DESTINATION
 
   const searchLocation =
     async () => {
@@ -125,7 +136,7 @@ export default function Maps() {
       if (!destination.trim()) {
 
         setError(
-          "🧭 Please enter destination"
+          "Please enter destination"
         );
 
         return;
@@ -137,38 +148,29 @@ export default function Maps() {
 
       try {
 
-        // ADD COUNTRY
-
         const query =
           `${destination},Sri Lanka`;
 
-        // WEATHER API
-
-        const response =
-          await fetch(
-
-            `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${apiKey}&units=metric`
-
-          );
+        const response = await fetch(
+  `https://api.openweathermap.org/data/2.5/weather?q=${destination}&appid=${apiKey}&units=metric`
+);
 
         const data =
           await response.json();
 
         console.log(data);
 
-        // ERROR
-
         if (!response.ok) {
 
           throw new Error(
 
             data.message ||
-
             "Unable to find location"
+
           );
         }
 
-        // COORDS
+        // DESTINATION COORDS
 
         setDestinationCoords([
 
@@ -178,7 +180,7 @@ export default function Maps() {
 
         ]);
 
-        // WEATHER
+        // WEATHER DATA
 
         setTravelWeather({
 
@@ -209,13 +211,13 @@ export default function Maps() {
 
       } catch (err) {
 
-        setError(
-          err.message
-        );
+        setError(err.message);
+
       }
 
       setLoading(false);
     };
+
 
   return (
 
@@ -228,40 +230,19 @@ export default function Maps() {
         <div className="maps-header">
 
           <h1>
-
             🗺 Travel Weather Maps
-
           </h1>
 
           <p>
-
-            View travel route,
-            destination weather
-            and smart travel analysis
-
+            View travel routes and destination weather
           </p>
 
         </div>
 
+
         {/* SEARCH */}
 
         <div className="maps-search">
-
-          <input
-
-            type="text"
-
-            placeholder="Current location"
-
-            value={currentLocation}
-
-            onChange={(e) =>
-              setCurrentLocation(
-                e.target.value
-              )
-            }
-
-          />
 
           <input
 
@@ -284,12 +265,13 @@ export default function Maps() {
           >
 
             {loading
-              ? "⏳"
+              ? "⏳ Loading..."
               : "Search Route"}
 
           </button>
 
         </div>
+
 
         {/* ERROR */}
 
@@ -302,6 +284,7 @@ export default function Maps() {
           </div>
 
         )}
+
 
         {/* MAP */}
 
@@ -326,18 +309,20 @@ export default function Maps() {
 
             />
 
+
             {/* AUTO CENTER */}
 
             <ChangeMapView
 
               center={
                 destinationCoords
-                  || currentCoords
+                || currentCoords
               }
 
             />
 
-            {/* CURRENT */}
+
+            {/* CURRENT LOCATION */}
 
             <Marker
               position={currentCoords}
@@ -350,6 +335,7 @@ export default function Maps() {
               </Popup>
 
             </Marker>
+
 
             {/* DESTINATION */}
 
@@ -370,6 +356,7 @@ export default function Maps() {
                   </Popup>
 
                 </Marker>
+
 
                 {/* ROUTE */}
 
@@ -401,28 +388,23 @@ export default function Maps() {
 
         </div>
 
-        {/* WEATHER */}
+
+        {/* WEATHER CARD */}
 
         {travelWeather && (
 
           <div className="travel-weather-card">
 
             <h2>
-
               🌦 Destination Weather
-
             </h2>
 
             <h1>
-
               📍 {travelWeather.city}
-
             </h1>
 
             <p>
-
               {travelWeather.country}
-
             </p>
 
             <div className="travel-temp">
@@ -433,9 +415,7 @@ export default function Maps() {
 
             <div className="travel-condition">
 
-              ☁ {
-                travelWeather.condition
-              }
+              ☁ {travelWeather.condition}
 
             </div>
 
@@ -445,9 +425,7 @@ export default function Maps() {
 
                 💧 Humidity:
                 {" "}
-                {
-                  travelWeather.humidity
-                }%
+                {travelWeather.humidity}%
 
               </div>
 
@@ -455,23 +433,9 @@ export default function Maps() {
 
                 🌬 Wind:
                 {" "}
-                {
-                  travelWeather.wind
-                } km/h
+                {travelWeather.wind} km/h
 
               </div>
-
-            </div>
-
-            {/* AI */}
-
-            <div className="travel-ai-box">
-
-              🤖 AI Travel Advice:
-              Weather conditions look
-              safe for travel. Carry
-              essentials based on
-              current conditions.
 
             </div>
 
@@ -482,6 +446,5 @@ export default function Maps() {
       </div>
 
     </Layout>
-
   );
 }
