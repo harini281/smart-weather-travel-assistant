@@ -68,7 +68,8 @@ npm install
 ```
 
 ### 4️⃣ Configure Environment Variables
-<img width="1914" height="904" alt="image" src="https://github.com/user-attachments/assets/535f09d1-1495-4655-86cd-2b7fd10a9646" />
+<img width="481" height="237" alt="image" src="https://github.com/user-attachments/assets/5affa8cb-4cf5-4045-9d8f-f3363128b876" />
+
 
 ```
 
