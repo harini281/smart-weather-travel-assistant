@@ -68,12 +68,8 @@ npm install
 ```
 
 ### 4️⃣ Configure Environment Variables
+<img width="1914" height="904" alt="image" src="https://github.com/user-attachments/assets/535f09d1-1495-4655-86cd-2b7fd10a9646" />
 
-Create a `.env` file in the root directory:
-
-```env
-VITE_GEMINI_API_KEY=your_gemini_api_key
-VITE_WEATHER_API_KEY=your_weather_api_key
 ```
 
 ### 5️⃣ Run the Development Server
@@ -86,10 +82,11 @@ npm run dev
 
 ## 📸 Application Preview
 
-> Add screenshots or GIF demonstrations here
+<img width="1914" height="904" alt="image" src="https://github.com/user-attachments/assets/bf767777-0eca-4fc4-8372-684bbf2c50d2" />
+
 
 ```md
-![Weather Assistant Preview](./screenshots/preview.png)
+
 ```
 
 ---
