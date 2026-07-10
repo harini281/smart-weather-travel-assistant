@@ -3,7 +3,7 @@ from "@google/generative-ai";
 
 const genAI =
   new GoogleGenerativeAI(
-    "AIzaSyCwgNr0zlzLqikgKWKcv2ZDCup_b9Qj8Ek"
+    "Your Key"
   );
 
 export const analyzeTravel =
